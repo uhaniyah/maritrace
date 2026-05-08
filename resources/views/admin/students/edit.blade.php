@@ -6,7 +6,7 @@
 @section('content')
 <div class="max-w-3xl">
     <div class="bg-white rounded-xl shadow-sm p-7">
-        <form action="{{ route('admin.students.update', $student->id) }}" method="POST" class="space-y-5">
+        <form action="{{ route('admin.students.update', $student->id) }}" method="POST" enctype="multipart/form-data" class="space-y-5">
             @csrf @method('PUT')
             <div class="grid grid-cols-2 gap-4">
                 <div>
@@ -53,6 +53,17 @@
                     <label class="block text-sm font-semibold text-gray-700 mb-1">Buku Pelaut</label>
                     <input type="text" name="seaman_book" value="{{ old('seaman_book', $student->seaman_book) }}" class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm">
                 </div>
+            </div>
+            <div>
+                <label class="block text-sm font-semibold text-gray-700 mb-1">Scan Buku Pelaut (PDF/Gambar)</label>
+                @if($student->seaman_book_path)
+                <div class="mb-2 text-xs text-blue-600">
+                    <a href="{{ $student->seaman_book_url }}" target="_blank" class="hover:underline"><i class="fas fa-file-alt mr-1"></i> Lihat Dokumen Saat Ini</a>
+                </div>
+                @endif
+                <input type="file" name="seaman_book_file" class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm @error('seaman_book_file') border-red-500 @enderror">
+                <p class="text-gray-500 text-xs mt-1">Kosongkan jika tidak ingin mengubah file. Maksimal 5MB.</p>
+                @error('seaman_book_file')<p class="text-red-500 text-xs mt-1">{{ $message }}</p>@enderror
             </div>
             <div class="grid grid-cols-2 gap-4">
                 <div>

@@ -3,48 +3,56 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\View\View;
 
 class AdminAuthController extends Controller
 {
-    public function showLogin()
+    /**
+     * Show the admin login form.
+     */
+    public function showLogin(): View|RedirectResponse
     {
-        if (session('admin_logged_in')) {
+        if (Auth::check()) {
             return redirect()->route('admin.dashboard');
         }
+
         return view('admin.login');
     }
 
-    public function login(Request $request)
+    /**
+     * Handle the admin login request.
+     */
+    public function login(Request $request): RedirectResponse
     {
-        $request->validate([
+        $credentials = $request->validate([
             'email' => 'required|email',
-            'password' => 'required'
+            'password' => 'required',
         ]);
 
-        $credentials = [
-            'admin@poltekpel-barombong.ac.id' => ['password' => 'admin123', 'name' => 'Administrator', 'role' => 'Administrator'],
-            'akademik@poltekpel-barombong.ac.id' => ['password' => 'akademik123', 'name' => 'Bagian Akademik', 'role' => 'Akademik'],
-            'instruktur@poltekpel-barombong.ac.id' => ['password' => 'instruktur123', 'name' => 'Koordinator Instruktur', 'role' => 'Instruktur'],
-        ];
+        if (Auth::attempt($credentials)) {
+            $request->session()->regenerate();
 
-        if (isset($credentials[$request->email]) && $credentials[$request->email]['password'] === $request->password) {
-            $user = $credentials[$request->email];
-            session([
-                'admin_logged_in' => true,
-                'admin_user' => $user['name'],
-                'admin_email' => $request->email,
-                'admin_role' => $user['role'],
-            ]);
-            return redirect()->route('admin.dashboard');
+            return redirect()->intended(route('admin.dashboard'));
         }
 
-        return back()->withErrors(['email' => 'Email atau password tidak valid.'])->withInput();
+        return back()->withErrors([
+            'email' => 'Email atau password tidak valid.',
+        ])->withInput();
     }
 
-    public function logout()
+    /**
+     * Log the admin out of the application.
+     */
+    public function logout(Request $request): RedirectResponse
     {
-        session()->forget(['admin_logged_in', 'admin_user', 'admin_email', 'admin_role']);
+        Auth::logout();
+
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+
         return redirect()->route('admin.login');
     }
 }

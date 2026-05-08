@@ -5,7 +5,7 @@
 @section('content')
 <div class="max-w-3xl">
     <div class="bg-white rounded-xl shadow-sm p-7">
-        <form action="{{ route('admin.students.store') }}" method="POST" class="space-y-5">
+        <form action="{{ route('admin.students.store') }}" method="POST" enctype="multipart/form-data" class="space-y-5">
             @csrf
             <div class="grid grid-cols-2 gap-4">
                 <div>
@@ -54,6 +54,12 @@
                     <label class="block text-sm font-semibold text-gray-700 mb-1">Nomor Buku Pelaut</label>
                     <input type="text" name="seaman_book" value="{{ old('seaman_book') }}" placeholder="SB-XXXXXX" class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm">
                 </div>
+            </div>
+            <div>
+                <label class="block text-sm font-semibold text-gray-700 mb-1">Scan Buku Pelaut (PDF/Gambar)</label>
+                <input type="file" name="seaman_book_file" class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm @error('seaman_book_file') border-red-500 @enderror">
+                <p class="text-gray-500 text-xs mt-1">Maksimal 5MB. Format: PDF, JPG, PNG.</p>
+                @error('seaman_book_file')<p class="text-red-500 text-xs mt-1">{{ $message }}</p>@enderror
             </div>
             <div class="grid grid-cols-2 gap-4">
                 <div>

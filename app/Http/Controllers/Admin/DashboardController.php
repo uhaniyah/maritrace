@@ -3,21 +3,20 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\Course;
-use App\Models\Student;
-use App\Models\Instructor;
-use App\Models\Enrollment;
 use App\Models\Certificate;
-use App\Models\Assessment;
+use App\Models\Course;
+use App\Models\Enrollment;
+use App\Models\Instructor;
+use App\Models\Student;
+use Illuminate\View\View;
 
 class DashboardController extends Controller
 {
-    public function index()
+    /**
+     * Display the admin dashboard with various maritime training metrics.
+     */
+    public function index(): View
     {
-        if (!session('admin_logged_in')) {
-            return redirect()->route('admin.login');
-        }
-
         $totalCourses = Course::count();
         $activeCourses = Course::where('status', 'active')->count();
         $totalStudents = Student::count();

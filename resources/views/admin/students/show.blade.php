@@ -20,7 +20,15 @@
                 <div><dt class="text-gray-400 text-xs">Telepon</dt><dd class="font-medium">{{ $student->phone ?? '-' }}</dd></div>
                 <div><dt class="text-gray-400 text-xs">Tgl. Lahir</dt><dd class="font-medium">{{ $student->date_of_birth?->format('d M Y') ?? '-' }}</dd></div>
                 <div><dt class="text-gray-400 text-xs">Kewarganegaraan</dt><dd class="font-medium">{{ $student->nationality }}</dd></div>
-                <div><dt class="text-gray-400 text-xs">Buku Pelaut</dt><dd class="font-medium">{{ $student->seaman_book ?? '-' }}</dd></div>
+                <div>
+                    <dt class="text-gray-400 text-xs">Buku Pelaut</dt>
+                    <dd class="font-medium">
+                        {{ $student->seaman_book ?? '-' }}
+                        @if($student->seaman_book_path)
+                        <a href="{{ $student->seaman_book_url }}" target="_blank" class="ml-2 text-blue-600 hover:underline" title="Lihat Dokumen"><i class="fas fa-external-link-alt text-[10px]"></i></a>
+                        @endif
+                    </dd>
+                </div>
                 @if($student->company)<div><dt class="text-gray-400 text-xs">Perusahaan</dt><dd class="font-medium">{{ $student->company }}</dd></div>@endif
                 @if($student->vessel_type)<div><dt class="text-gray-400 text-xs">Jenis Kapal</dt><dd class="font-medium">{{ $student->vessel_type }}</dd></div>@endif
             </dl>
